@@ -4,8 +4,8 @@
  * UI.Layout
  */
 angular.module('ui.layout', [])
-  .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', '$timeout', '$window', 'LayoutContainer', 'Layout',
-  function uiLayoutCtrl($scope, $attrs, $element, $timeout, $window, LayoutContainer, Layout) {
+  .controller('uiLayoutCtrl', ['$rootScope', '$scope', '$attrs', '$element', '$timeout', '$window', 'LayoutContainer', 'Layout',
+  function uiLayoutCtrl($rootScope, $scope, $attrs, $element, $timeout, $window, LayoutContainer, Layout) {
 
     var ctrl = this;
     var opts = angular.extend({}, $scope.$eval($attrs.uiLayout), $scope.$eval($attrs.options));
@@ -126,7 +126,7 @@ angular.module('ui.layout', [])
             // broadcast an event that resize happened (debounced to 50ms)
             if(debounceEvent) $timeout.cancel(debounceEvent);
             debounceEvent = $timeout(function() {
-              $scope.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
+              $rootScope.$broadcast('ui.layout.resize', beforeContainer, afterContainer);
               debounceEvent = null;
             }, 50);
           }
@@ -474,7 +474,7 @@ angular.module('ui.layout', [])
           }
         }
       });
-      $scope.$broadcast('ui.layout.toggle', c);
+      $rootScope.$broadcast('ui.layout.toggle', c);
       Layout.toggled();
 
       return c.collapsed;
@@ -541,7 +541,7 @@ angular.module('ui.layout', [])
           }
         }
       });
-      $scope.$broadcast('ui.layout.toggle', c);
+      $rootScope.$broadcast('ui.layout.toggle', c);
       Layout.toggled();
       return c.collapsed;
     };
@@ -968,7 +968,7 @@ angular.module('ui.layout', [])
         };
       }])
 
-  .directive('uiLayoutLoaded', ['$timeout', 'Layout', function($timeout, Layout) {
+  .directive('uiLayoutLoaded', ['$rootScope', '$timeout', 'Layout', function($rootScope, $timeout, Layout) {
     // Currently necessary for programmatic toggling to work with "initially" collapsed containers,
     // because prog. toggling depends on the logic of prevButton and nextButton (which should be probably refactored out)
     //
@@ -988,11 +988,11 @@ angular.module('ui.layout', [])
         if (!attrs['uiLayoutLoaded']) {
           Layout.toggle().then(
             function(){
-              $scope.$broadcast('ui.layout.loaded', null);
+              $rootScope.$broadcast('ui.layout.loaded', null);
             }
           );
         } else {
-          $scope.$broadcast('ui.layout.loaded',  attrs['uiLayoutLoaded']);
+          $rootScope.$broadcast('ui.layout.loaded',  attrs['uiLayoutLoaded']);
         }
       }
     };
