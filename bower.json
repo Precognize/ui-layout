@@ -8,6 +8,7 @@
   "authors": [
     "https://github.com/angular-ui/ui-layout/contributors"
   ],
+  "version": "1.4.4",
   "description": "This directive allows you to split !",
   "license": "MIT",
   "ignore": [
